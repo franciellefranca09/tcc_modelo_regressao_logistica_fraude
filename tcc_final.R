@@ -1,4 +1,4 @@
-# Carregadar as bibliotecas necessárias no R
+# Carregadar as bibliotecas necessárias 
 
 library(caret)
 library(car)
@@ -11,16 +11,19 @@ library(psych)
 
 # Carregar a base de dados (no caso do TCC em formato CSV)
 
-dados <- read.csv('C:/Users/Francielle/Desktop/GitHub/base_contas_ethereum_original.csv')
+dados <- read.csv('Caminho do Banco de Dados CSV')
 describe(dados)
 
 # Verificar quais colunas têm todos os valores iguais a 0
+
 colunas_com_zero <- sapply(dados, function(x) all(x == 0))
 
 # Exibir as colunas que têm todos os valores iguais a 0
+                           
 colunas_com_zero[colunas_com_zero == TRUE]
 
 # Contar o número de NA em cada coluna
+                           
 soma_na <- sapply(dados, function(x) sum(is.na(x)))
 print(soma_na)
 
@@ -46,19 +49,25 @@ dados_prep <- subset(dados, select = -c(Index,
                                         ERC20_most_sent_token_type, 
                                         ERC20_most_rec_token_type,
                                         Total_ERC20_tnxs,
-                                        ERC20_total_Ether_received,                                                      ERC20_total_ether_sent,
+                                        ERC20_total_Ether_received,                                                      
+                                        ERC20_total_ether_sent,
                                         ERC20_total_Ether_sent_contract,
                                         ERC20_uniq_sent_addr,
                                         ERC20_uniq_rec_addr, 
                                         ERC20_uniq_sent_addr.1, 
-                                        ERC20_uniq_rec_contract_addr,                                                    ERC20_avg_time_between_sent_tnx, 
-                                        ERC20_avg_time_between_rec_tnx,                                                  ERC20_avg_time_between_rec_2_tnx,
-                                        ERC20_avg_time_between_contract_tnx,                                             ERC20_min_val_rec, 
+                                        ERC20_uniq_rec_contract_addr,                                                   
+                                        ERC20_avg_time_between_sent_tnx, 
+                                        ERC20_avg_time_between_rec_tnx,                                                 
+                                        ERC20_avg_time_between_rec_2_tnx,
+                                        ERC20_avg_time_between_contract_tnx,                                             
+                                        ERC20_min_val_rec, 
                                         ERC20_min_val_sent,
                                         ERC20_max_val_sent, 
                                         ERC20_avg_val_sent, 
-                                        ERC20_min_val_sent_contract,                                                     ERC20_max_val_sent_contract,
-                                        ERC20_avg_val_sent_contract,                                                     ERC20_uniq_sent_token_name, 
+                                        ERC20_min_val_sent_contract,                                                     
+                                        ERC20_max_val_sent_contract,
+                                        ERC20_avg_val_sent_contract,                                                     
+                                        ERC20_uniq_sent_token_name, 
                                         ERC20_uniq_rec_token_name,
                                         ERC20_max_val_rec, 
                                         ERC20_avg_val_rec))
