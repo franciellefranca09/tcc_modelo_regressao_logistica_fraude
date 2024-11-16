@@ -41,53 +41,53 @@ ui <- fluidPage(
 
 server <- function(input, output, session) {
   
-# Carregando o Banco de Dados
+# Carregar a base de dados (no caso do TCC em formato CSV)
   
 dados <- reactive({
   req(input$file)
   data <- read.csv(input$file$datapath)
     
-# Excluindo as variáveis de acordo com o tratamento realizado anteriormente
+# Excluindo as variáveis independentes de acordo com o tratamento de dados realizado anteriormente
     
 data <- subset(data, select = -c(Index,
                                  Address,
-                                     min_value_sent_to_contract,
-                                     max_val_sent_to_contract,
-                                     avg_value_sent_to_contract,
-                                     total_ether_sent_contracts,
-                                     ERC20_most_sent_token_type, 
-                                     ERC20_most_rec_token_type,
-                                     Total_ERC20_tnxs,
-                                     ERC20_total_Ether_received,
-                                     ERC20_total_ether_sent,
-                                     ERC20_total_Ether_sent_contract,
-                                     ERC20_uniq_sent_addr,
-                                     ERC20_uniq_rec_addr, 
-                                     ERC20_uniq_sent_addr.1, 
-                                     ERC20_uniq_rec_contract_addr,
-                                     ERC20_avg_time_between_sent_tnx, 
-                                     ERC20_avg_time_between_rec_tnx,
-                                     ERC20_avg_time_between_rec_2_tnx,
-                                     ERC20_avg_time_between_contract_tnx, 
-                                     ERC20_min_val_rec, 
-                                     ERC20_min_val_sent,
-                                     ERC20_max_val_sent, 
-                                     ERC20_avg_val_sent, 
-                                     ERC20_min_val_sent_contract,
-                                     ERC20_max_val_sent_contract,
-                                     ERC20_avg_val_sent_contract, 
-                                     ERC20_uniq_sent_token_name, 
-                                     ERC20_uniq_rec_token_name,
-                                     ERC20_max_val_rec, 
-                                     ERC20_avg_val_rec))
+                                 min_value_sent_to_contract,
+                                 max_val_sent_to_contract,
+                                 avg_value_sent_to_contract,
+                                 total_ether_sent_contracts,
+                                 ERC20_most_sent_token_type, 
+                                 ERC20_most_rec_token_type,
+                                 Total_ERC20_tnxs,
+                                 ERC20_total_Ether_received,
+                                 ERC20_total_ether_sent,
+                                 ERC20_total_Ether_sent_contract,
+                                 ERC20_uniq_sent_addr,
+                                 ERC20_uniq_rec_addr, 
+                                 ERC20_uniq_sent_addr.1, 
+                                 ERC20_uniq_rec_contract_addr,
+                                 ERC20_avg_time_between_sent_tnx, 
+                                 ERC20_avg_time_between_rec_tnx,
+                                 ERC20_avg_time_between_rec_2_tnx,
+                                 ERC20_avg_time_between_contract_tnx, 
+                                 ERC20_min_val_rec, 
+                                 ERC20_min_val_sent,
+                                 ERC20_max_val_sent, 
+                                 ERC20_avg_val_sent, 
+                                 ERC20_min_val_sent_contract,
+                                 ERC20_max_val_sent_contract,
+                                 ERC20_avg_val_sent_contract, 
+                                 ERC20_uniq_sent_token_name, 
+                                 ERC20_uniq_rec_token_name,
+                                 ERC20_max_val_rec, 
+                                 ERC20_avg_val_rec))
     
-# Converter a varável FLAG para fator
+# Converter a variável dependente binária (FLAG) para fator
     
 data$FLAG <- as.factor(data$FLAG)
   return(data)
 })
   
-# Aba Banco de Dados
+# Construindo a aba Banco de Dados
   
 output$fulldata <- DT::renderDT({
   req(dados())
@@ -102,7 +102,7 @@ output$fulldata <- DT::renderDT({
   )
 })
   
-# Aba Resumo de Dados
+# Construindo a Resumo de Dados
   
 output$data_summary <- DT::renderDT({
   req(dados())
@@ -136,7 +136,7 @@ output$data_summary <- DT::renderDT({
     )
   })
   
-# Treinar o modelo
+# Dividir os dados em conjunto de treino (70%) e teste (30%)
   
 modelo <- eventReactive(input$train, {
   req(dados())
@@ -156,9 +156,7 @@ glm(FLAG ~ Avg_min_between_sent_tnx +
       avg_val_received, 
     family = binomial, data = treino_dados)
 })
-  
-# Estatísticas do modelo
-  
+    
 output$model_stats <- renderPrint({
   req(modelo(), dados())
   data <- dados()
@@ -200,7 +198,7 @@ output$roc_plot <- renderPlot({
   teste_prob <- predict(modelo(), newdata = teste_dados, type = "response")
   roc_obj <- roc(teste_dados$FLAG, teste_prob)
     
-# Plot Curva ROC 
+# Gráfico Curva ROC 
   
   plot(roc_obj, main = "Curva ROC", col = "black", lwd = 2, 
        lty = 1, cex.main = 1.5)
